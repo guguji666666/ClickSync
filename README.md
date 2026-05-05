@@ -11,6 +11,8 @@
 
 Click Sync 是一个基于 WebHID 的多品牌鼠标网页驱动控制台，目标是把不同品牌的配置能力统一到一个浏览器应用里完成，不需要安装本地驱动程序。
 
+体验网址：[https://nuitfanee.github.io/ClickSync.github.io](https://nuitfanee.github.io/ClickSync.github.io)
+
 当前代码中已接入品牌：`Razer(雷蛇)`、`Logitech(罗技)`、`Rapoo(雷柏)`、`ATK`、`Ninjutso`、`Chaos`。
 
 ### 项目特点
@@ -195,6 +197,8 @@ npx http-server . -p 8000
 ## English
 
 Click Sync is a WebHID-based multi-brand mouse web driver console. Its goal is to unify the configuration capabilities of different brands into a single browser application, eliminating the need to install local driver programs.
+
+Live demo: [https://nuitfanee.github.io/ClickSync.github.io](https://nuitfanee.github.io/ClickSync.github.io)
 
 Supported brands in the current code: `Razer`, `Logitech`, `Rapoo`, `ATK`, `Ninjutso`, `Chaos`.
 
