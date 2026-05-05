@@ -532,7 +532,20 @@
   ["在下方面板直接拖动或输入修改DPI", "Drag below or enter values directly to edit DPI"],
   ["范围：${minT} - ${maxT}", "Range: ${minT} - ${maxT}"],
   ["范围：${debounceMs[0]}ms - ${debounceMs[debounceMs.length - 1]}ms", "Range: ${debounceMs[0]}ms - ${debounceMs[debounceMs.length - 1]}ms"],
-["是否关闭板载内存模式，关闭后驱动设置不保证可用", "Turn off onboard memory mode? Driver settings are not guaranteed after disabling."]
+["是否关闭板载内存模式，关闭后驱动设置不保证可用", "Turn off onboard memory mode? Driver settings are not guaranteed after disabling."],
+["分键", "SEP"],
+["联动", "LNK"],
+["触发点", "Trigger Point"],
+["左键触发点", "Left Trigger"],
+["右键触发点", "Right Trigger"],
+["快速触发", "Rapid Trigger"],
+["左键快速触发", "Left Rapid"],
+["右键快速触发", "Right Rapid"],
+["点击触觉反馈", "Click Feedback"],
+["左键触觉反馈", "Left Feedback"],
+["右键触觉反馈", "Right Feedback"],
+["左右键同步 // RANGE 1 - 10", "L/R linked // RANGE 1 - 10"],
+["左右键同步 // RANGE 0 - 5", "L/R linked // RANGE 0 - 5"]
   ]);
 
   window.UI_LITERAL_PAIRS = UI_LITERAL_PAIRS;
