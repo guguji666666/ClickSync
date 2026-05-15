@@ -164,7 +164,7 @@
     ["测试工具", "Tools"],
     ["配置槽位", "Profile Slots"],
     ["设备状态", "Device Status"],
-    ["预留按钮", "Reserved Action"],
+    ["打开 Solar Orbital", "Open Solar Orbital"],
     ["休眠时间", "Sleep Time"],
     ["防抖", "Debounce"],
     ["传感器角度", "Sensor Angle"],

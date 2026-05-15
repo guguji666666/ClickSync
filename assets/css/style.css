@@ -4702,6 +4702,7 @@ body.dark .stagehead{
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    text-decoration: none;
     opacity: .94;
     transition: transform .2s var(--trans-curve), opacity .2s var(--trans-curve), background .2s var(--trans-curve);
 }
