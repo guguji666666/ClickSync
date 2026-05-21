@@ -239,7 +239,7 @@ const LOGITECH_DPI_STEP_SEGMENTS = Object.freeze([
         texts: {
           landingTitle: "CRDRAKO",
           landingCaption: "stare into the void to connect (CRDRAKO)",
-          lod: { code: "005 // LOD", title: "LOD", desc: "Lift-off distance 0.7 / 1 / 2 mm" },
+          lod: { code: "005 // LOD", title: "LOD高度", desc: "Lift-off distance 0.7 / 1 / 2 mm" },
           led: null,
           perfMode: {
             hp: { color: "#000000", text: "Standard mode" },
@@ -924,8 +924,7 @@ const LOGITECH_DPI_STEP_SEGMENTS = Object.freeze([
     rippleControl: Object.freeze({ regions: Object.freeze(["dual-right"]), requiresFeatures: Object.freeze(["hasRippleControl"]), requiresCapabilities: Object.freeze([]) }),
     secondarySurfaceToggle: Object.freeze({ regions: Object.freeze(["dual-right"]), requiresFeatures: Object.freeze(["hasSecondarySurfaceToggle"]), requiresCapabilities: Object.freeze([]) }),
     keyScanningRate: Object.freeze({ regions: Object.freeze(["dual-right"]), requiresFeatures: Object.freeze(["hasKeyScanRate"]), requiresCapabilities: Object.freeze([]) }),
-    speedClickLeft: Object.freeze({ regions: Object.freeze(["dual-right"]), requiresFeatures: Object.freeze(["hasSpeedClick"]), requiresCapabilities: Object.freeze(["speedEnable"]) }),
-    speedClickRight: Object.freeze({ regions: Object.freeze(["dual-right"]), requiresFeatures: Object.freeze(["hasSpeedClick"]), requiresCapabilities: Object.freeze(["speedEnable"]) }),
+    speedClickMode: Object.freeze({ regions: Object.freeze(["dual-right"]), requiresFeatures: Object.freeze(["hasSpeedClick"]), requiresCapabilities: Object.freeze(["speedEnable"]) }),
     scrollHpMode: Object.freeze({ regions: Object.freeze(["dual-right"]), requiresFeatures: Object.freeze(["hasScrollHp"]), requiresCapabilities: Object.freeze(["scrollHp"]) }),
     scrollHpWindowMs: Object.freeze({ regions: Object.freeze(["dual-left"]), requiresFeatures: Object.freeze(["hasScrollHp"]), requiresCapabilities: Object.freeze(["scrollHp"]) }),
     surfaceModePrimary: Object.freeze({ regions: Object.freeze(["dual-right"]), requiresFeatures: Object.freeze(["hasPrimarySurfaceToggle"]), requiresCapabilities: Object.freeze([]) }),
@@ -1015,7 +1014,7 @@ const LOGITECH_DPI_STEP_SEGMENTS = Object.freeze([
       : nextRule.requiresFeatures.every((key) => !!features[key]);
     const capabilityPass = !Array.isArray(nextRule.requiresCapabilities) || !nextRule.requiresCapabilities.length
       ? true
-      : nextRule.requiresCapabilities.every((key) => !!capabilities[key]);
+      : nextRule.requiresCapabilities.every((key) => capabilities[key] === true);
     return enabledPass && featurePass && capabilityPass;
   }
 

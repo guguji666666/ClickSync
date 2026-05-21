@@ -62,6 +62,7 @@
   const RAZER_VENDOR_ID = 0x1532;
   const RAZER_SUPPORTED_PIDS = new Set([0x00b3, 0x00b6, 0x00b7, 0x00c0, 0x00c1, 0x00c2, 0x00c3, 0x00c4, 0x00c5, 0x00e5, 0x00e6]);
   const RAZER_DEFAULT_CONTROL_USAGE_PAGE = 0x0c;
+  const RAZER_WEBHID_REPORT_ID = 0x00;
   const RAZER_VIPER_V3_PIDS = new Set([0x00c0, 0x00c1]);
   const RAZER_LEGACY_MOUSE_USAGE_PAGE = 0x0001;
   const RAZER_LEGACY_MOUSE_USAGE = 0x0002;
@@ -132,10 +133,9 @@
         transportRole: meta?.transportRole ? String(meta.transportRole) : null,
         bodyPid: Number.isFinite(Number(meta?.bodyPid)) ? Number(meta.bodyPid) : null,
         donglePid: Number.isFinite(Number(meta?.donglePid)) ? Number(meta.donglePid) : null,
-        webhidFeatureReportId: Number.isFinite(Number(meta?.webhidFeatureReportId))
-          ? Number(meta.webhidFeatureReportId)
-          : 0,
-        featureReportId: Number.isFinite(Number(meta?.featureReportId)) ? Number(meta.featureReportId) : null,
+        webhidReportId: Number.isFinite(Number(meta?.webhidReportId))
+          ? Number(meta.webhidReportId)
+          : RAZER_WEBHID_REPORT_ID,
         eventReportId: Number.isFinite(Number(meta?.eventReportId)) ? Number(meta.eventReportId) : null,
         controlUsagePage: Number.isFinite(Number(meta?.controlUsagePage))
           ? Number(meta.controlUsagePage)
@@ -244,7 +244,7 @@
   }
 
   function _hasRazerLegacyPrimaryMouseCollection(d) {
-    if (!Array.isArray(d?.collections) || !d.collections.length) return false;
+    if (!Array.isArray(d?.collections) || !d.collections.length) return true;
     let found = false;
     _walkHidCollections(d.collections, (collection) => {
       if (found) return;
@@ -281,7 +281,6 @@
     const legacyControlCandidate = (
       _isRazerViperV3Pid(d?.productId)
       && legacyPrimaryMouseCollection
-      && featureReportCount > 0
     );
     const officialEventCandidate = (
       collections.length > 1
@@ -303,7 +302,7 @@
       hasFeatureReports: featureReportCount > 0,
       hasInputReports: inputReportCount > 0,
       controlUsagePage,
-      webhidFeatureReportId: transportMeta?.webhidFeatureReportId ?? 0,
+      webhidReportId: transportMeta?.webhidReportId ?? RAZER_WEBHID_REPORT_ID,
       officialControlCandidate,
       officialEventCandidate,
       legacyPrimaryMouseCollection,
@@ -312,7 +311,6 @@
       transportRole: transportMeta?.transportRole || null,
       bodyPid: transportMeta?.bodyPid ?? null,
       donglePid: transportMeta?.donglePid ?? null,
-      featureReportId: transportMeta?.featureReportId ?? null,
       eventReportId: transportMeta?.eventReportId ?? null,
     };
   }
@@ -335,7 +333,7 @@
   }
 
   function _buildRazerDebugLabel(controlSummary, eventSummary, eventMode) {
-    const controlLabel = `${_formatRazerHandleRef(controlSummary)} ctrl[c=${controlSummary.collectionCount},up=${_formatRazerUsagePage(controlSummary.usagePage)},rid=${Number(controlSummary.webhidFeatureReportId ?? 0)},ff=${Number(controlSummary.firstCollectionFeatureReportCount ?? 0)},fi=${Number(controlSummary.firstCollectionInputReportCount ?? 0)},f=${controlSummary.hasFeatureReports ? "y" : "n"},i=${controlSummary.hasInputReports ? "y" : "n"}]`;
+    const controlLabel = `${_formatRazerHandleRef(controlSummary)} ctrl[c=${controlSummary.collectionCount},up=${_formatRazerUsagePage(controlSummary.usagePage)},rid=${Number(controlSummary.webhidReportId ?? 0)},ff=${Number(controlSummary.firstCollectionFeatureReportCount ?? 0)},fi=${Number(controlSummary.firstCollectionInputReportCount ?? 0)},f=${controlSummary.hasFeatureReports ? "y" : "n"},i=${controlSummary.hasInputReports ? "y" : "n"}]`;
     if (eventMode === "shared") return `${controlLabel} evt=shared`;
     return `${controlLabel} evt=${_formatRazerHandleRef(eventSummary)}[c=${eventSummary.collectionCount},up=${_formatRazerUsagePage(eventSummary.usagePage)},fi=${Number(eventSummary.firstCollectionInputReportCount ?? 0)},i=${eventSummary.hasInputReports ? "y" : "n"}]`;
   }

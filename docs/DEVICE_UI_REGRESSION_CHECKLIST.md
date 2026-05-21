@@ -306,6 +306,8 @@
 - 布局应为 `dual`
 - `surfaceFeel` 只应显示在右侧 `cycle` 面板，左侧 `surfaceFeel` 滑条不应显示
 - `surfaceFeel` 点击顺序为 `0.7mm -> 1mm -> 2mm -> 0.7mm`
+- `speedClickMode` 应显示为一个右侧 `cycle` 面板，点击顺序为 `关闭 -> 仅左键 -> 仅右键 -> 左右键`
+- 不应再显示独立的 `speedClickLeft` / `speedClickRight` 两个 toggle 面板
 - `scrollHpMode` 应显示在右侧 `cycle` 面板，点击顺序为 `关闭(0) -> 上滚(2) -> 下滚(3) -> 双向(1)`
 - `scrollHpWindowMs` 应显示在左侧离散 range 面板，档位为 `100/200/300/400/500/1000ms`
 - 当 `scrollHpMode = 0`、`hasScrollHp` 为 false 或 `capabilities.scrollHp !== true` 时，`scrollHpWindowMs` 面板必须锁定

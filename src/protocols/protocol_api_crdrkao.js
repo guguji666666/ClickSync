@@ -1880,18 +1880,18 @@
   // ============================================================
   const DEFAULT_BUTTON_SOURCE_CODE_BY_BUTTON_ID = Object.freeze({
     1: 0x01,
-    2: 0x04,
-    3: 0x05,
-    4: 0x02,
-    5: 0x03,
+    2: 0x02,
+    3: 0x03,
+    4: 0x05,
+    5: 0x04,
   });
 
   const DEFAULT_ACTION_LABEL_BY_BUTTON_ID = Object.freeze({
-    1: "Left Click",
-    2: "Back",
-    3: "Forward",
-    4: "Right Click",
-    5: "Middle Click",
+    1: "左键",
+    2: "右键",
+    3: "中键",
+    4: "前进",
+    5: "后退",
   });
 
   const CRDRAKO_KEYMAP_ACTION_TYPE = Object.freeze({
@@ -1956,16 +1956,16 @@
       add(label, "system", CRDRAKO_KEYMAP_ACTION_TYPE.CONSUMER_KEYS, clampInt(usage, 0, 0xffff));
     };
 
-    add("Disable", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.OFF, 0x0000);
-    add("Left Click", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0001);
-    add("Right Click", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0002);
-    add("Middle Click", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0003);
-    add("Back", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0004);
-    add("Forward", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0005);
-    add("Wheel Up", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0010);
-    add("Wheel Down", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0011);
-    add("DPI Loop Up", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0014);
-    add("DPI Loop", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.DPI, 0x0006);
+    add("禁止按键", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.OFF, 0x0000);
+    add("左键", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0001);
+    add("右键", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0002);
+    add("中键", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0003);
+    add("后退", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0004);
+    add("前进", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0005);
+    add("向上滚动", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0010);
+    add("向下滚动", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0011);
+    add("DPI循环+", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.BUTTON_CODE, 0x0014);
+    add("DPI循环", "mouse", CRDRAKO_KEYMAP_ACTION_TYPE.DPI, 0x0006);
 
     for (let i = 0; i < 26; i++) {
       addKeyboardUsage(String.fromCharCode(65 + i), 0x04 + i);
@@ -2001,85 +2001,94 @@
     addKeyboardModifier("Right Alt", CRDRAKO_KEYBOARD_MODIFIER.RIGHT_ALT);
     addKeyboardModifier("Right Win", CRDRAKO_KEYBOARD_MODIFIER.RIGHT_WIN);
 
-    addKeyboardChord("Copy Ctrl + C", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x06);
-    addKeyboardChord("Paste Ctrl + V", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x19);
-    addKeyboardChord("Cut Ctrl + X", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x1b);
-    addKeyboardChord("Undo Ctrl + Z", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x1d);
-    addKeyboardChord("Redo Ctrl + Y", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x1c);
-    addKeyboardChord("Select All Ctrl + A", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x04);
-    addKeyboardChord("Save Ctrl + S", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x16);
-    addKeyboardChord("Find Ctrl + F", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x09);
-    addKeyboardChord("New Ctrl + N", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x11);
-    addKeyboardChord("Print Ctrl + P", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x13);
-    addKeyboardChord("Switch Window Alt + Tab", CRDRAKO_KEYBOARD_MODIFIER.LEFT_ALT, 0x2b);
-    addKeyboardChord("Close Window Alt + F4", CRDRAKO_KEYBOARD_MODIFIER.LEFT_ALT, 0x3d);
-    addKeyboardChord("Show Desktop Win + D", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x07);
-    addKeyboardChord("File Explorer Win + E", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x08);
-    addKeyboardChord("Lock Computer Win + L", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x0f);
-    addKeyboardChord("Run Win + R", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x15);
-    addKeyboardChord("Open Settings Win + I", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x0c);
-    addKeyboardChord("Task Manager Ctrl + Shift + Esc", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL | CRDRAKO_KEYBOARD_MODIFIER.LEFT_SHIFT, 0x29);
-    addKeyboardChord("Reopen Closed Tab Ctrl + Shift + T", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL | CRDRAKO_KEYBOARD_MODIFIER.LEFT_SHIFT, 0x17);
+    addKeyboardChord("复制 Ctrl + C", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x06);
+    addKeyboardChord("粘贴 Ctrl + V", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x19);
+    addKeyboardChord("剪切 Ctrl + X", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x1b);
+    addKeyboardChord("撤销 Ctrl + Z", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x1d);
+    addKeyboardChord("重做 Ctrl + Y", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x1c);
+    addKeyboardChord("全选 Ctrl + A", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x04);
+    addKeyboardChord("保存 Ctrl + S", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x16);
+    addKeyboardChord("查找 Ctrl + F", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x09);
+    addKeyboardChord("新建 Ctrl + N", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x11);
+    addKeyboardChord("打印 Ctrl + P", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL, 0x13);
+    addKeyboardChord("切换窗口 Alt + Tab", CRDRAKO_KEYBOARD_MODIFIER.LEFT_ALT, 0x2b);
+    addKeyboardChord("关闭窗口 Alt + F4", CRDRAKO_KEYBOARD_MODIFIER.LEFT_ALT, 0x3d);
+    addKeyboardChord("显示桌面 Win + D", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x07);
+    addKeyboardChord("文件资源管理器 Win + E", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x08);
+    addKeyboardChord("锁定电脑 Win + L", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x0f);
+    addKeyboardChord("运行 Win + R", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x15);
+    addKeyboardChord("打开设置 Win + I", CRDRAKO_KEYBOARD_MODIFIER.LEFT_WIN, 0x0c);
+    addKeyboardChord("任务管理器 Ctrl + Shift + Esc", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL | CRDRAKO_KEYBOARD_MODIFIER.LEFT_SHIFT, 0x29);
+    addKeyboardChord("恢复关闭标签页 Ctrl + Shift + T", CRDRAKO_KEYBOARD_MODIFIER.LEFT_CTRL | CRDRAKO_KEYBOARD_MODIFIER.LEFT_SHIFT, 0x17);
 
-    addConsumer("Volume Up", CRDRAKO_CONSUMER_USAGE.VOLUME_UP);
-    addConsumer("Volume Down", CRDRAKO_CONSUMER_USAGE.VOLUME_DOWN);
-    addConsumer("Mute", CRDRAKO_CONSUMER_USAGE.MUTE);
-    addConsumer("Play/Pause", CRDRAKO_CONSUMER_USAGE.PLAY_PAUSE);
-    addConsumer("Next Track", CRDRAKO_CONSUMER_USAGE.NEXT_TRACK);
-    addConsumer("Previous Track", CRDRAKO_CONSUMER_USAGE.PREVIOUS_TRACK);
-    addConsumer("Stop", CRDRAKO_CONSUMER_USAGE.STOP);
-    addConsumer("Calculator", CRDRAKO_CONSUMER_USAGE.CALCULATOR);
-    addConsumer("This PC", CRDRAKO_CONSUMER_USAGE.THIS_PC);
-    addConsumer("Browser", CRDRAKO_CONSUMER_USAGE.BROWSER);
-    addConsumer("Mail", CRDRAKO_CONSUMER_USAGE.MAIL);
-    addConsumer("Media Player", CRDRAKO_CONSUMER_USAGE.MEDIA_PLAYER);
-    addConsumer("WWW Home", CRDRAKO_CONSUMER_USAGE.WWW_HOME);
-    addConsumer("WWW Refresh", CRDRAKO_CONSUMER_USAGE.WWW_REFRESH);
-    addConsumer("Lighting Up", CRDRAKO_CONSUMER_USAGE.LIGHTING_UP);
-    addConsumer("Lighting Down", CRDRAKO_CONSUMER_USAGE.LIGHTING_DOWN);
+    addConsumer("音量加", CRDRAKO_CONSUMER_USAGE.VOLUME_UP);
+    addConsumer("音量减", CRDRAKO_CONSUMER_USAGE.VOLUME_DOWN);
+    addConsumer("静音", CRDRAKO_CONSUMER_USAGE.MUTE);
+    addConsumer("播放/暂停", CRDRAKO_CONSUMER_USAGE.PLAY_PAUSE);
+    addConsumer("下一曲", CRDRAKO_CONSUMER_USAGE.NEXT_TRACK);
+    addConsumer("上一曲", CRDRAKO_CONSUMER_USAGE.PREVIOUS_TRACK);
+    addConsumer("停止播放", CRDRAKO_CONSUMER_USAGE.STOP);
+    addConsumer("计算器", CRDRAKO_CONSUMER_USAGE.CALCULATOR);
+    addConsumer("我的电脑", CRDRAKO_CONSUMER_USAGE.THIS_PC);
+    addConsumer("浏览器", CRDRAKO_CONSUMER_USAGE.BROWSER);
+    addConsumer("邮件", CRDRAKO_CONSUMER_USAGE.MAIL);
+    addConsumer("媒体播放器", CRDRAKO_CONSUMER_USAGE.MEDIA_PLAYER);
+    addConsumer("主页", CRDRAKO_CONSUMER_USAGE.WWW_HOME);
+    addConsumer("刷新页面", CRDRAKO_CONSUMER_USAGE.WWW_REFRESH);
+    addConsumer("屏幕亮度增加", CRDRAKO_CONSUMER_USAGE.LIGHTING_UP);
+    addConsumer("屏幕亮度减少", CRDRAKO_CONSUMER_USAGE.LIGHTING_DOWN);
 
     return Object.freeze(actions);
   })();
 
+  // Compatibility only for exact labels previously exported by this driver.
+  // Do not add convenience aliases unless the action exists in the official catalog.
   const KEYMAP_LABEL_ALIASES = Object.freeze({
-    left: "Left Click",
-    "left click": "Left Click",
-    right: "Right Click",
-    "right click": "Right Click",
-    middle: "Middle Click",
-    "middle click": "Middle Click",
-    back: "Back",
-    backward: "Back",
-    forward: "Forward",
-    "dpi loop up": "DPI Loop Up",
-    dpiloop: "DPI Loop",
-    "dpi loop": "DPI Loop",
-    disable: "Disable",
-    disabled: "Disable",
-    "double click": "Double Click",
-    "wheel up": "Wheel Up",
-    "wheel down": "Wheel Down",
-    volup: "Volume Up",
-    voldown: "Volume Down",
-    mute: "Mute",
-    "play pause": "Play/Pause",
-    "play/pause": "Play/Pause",
-    next: "Next Track",
-    "next track": "Next Track",
-    previous: "Previous Track",
-    "previous track": "Previous Track",
-    stop: "Stop",
-    "stop playback": "Stop",
-    calculator: "Calculator",
-    "this pc": "This PC",
-    "my computer": "This PC",
-    browser: "Browser",
-    mail: "Mail",
-    "media player": "Media Player",
-    "www home": "WWW Home",
-    "www refresh": "WWW Refresh",
-    "lighting up": "Lighting Up",
-    "lighting down": "Lighting Down",
+    "left click": "左键",
+    "right click": "右键",
+    "middle click": "中键",
+    back: "后退",
+    forward: "前进",
+    "dpi loop": "DPI循环",
+    "dpi loop up": "DPI循环+",
+    disable: "禁止按键",
+    "wheel up": "向上滚动",
+    "wheel down": "向下滚动",
+    "copy ctrl + c": "复制 Ctrl + C",
+    "paste ctrl + v": "粘贴 Ctrl + V",
+    "cut ctrl + x": "剪切 Ctrl + X",
+    "undo ctrl + z": "撤销 Ctrl + Z",
+    "redo ctrl + y": "重做 Ctrl + Y",
+    "select all ctrl + a": "全选 Ctrl + A",
+    "save ctrl + s": "保存 Ctrl + S",
+    "find ctrl + f": "查找 Ctrl + F",
+    "new ctrl + n": "新建 Ctrl + N",
+    "print ctrl + p": "打印 Ctrl + P",
+    "switch window alt + tab": "切换窗口 Alt + Tab",
+    "close window alt + f4": "关闭窗口 Alt + F4",
+    "show desktop win + d": "显示桌面 Win + D",
+    "file explorer win + e": "文件资源管理器 Win + E",
+    "lock computer win + l": "锁定电脑 Win + L",
+    "run win + r": "运行 Win + R",
+    "open settings win + i": "打开设置 Win + I",
+    "task manager ctrl + shift + esc": "任务管理器 Ctrl + Shift + Esc",
+    "reopen closed tab ctrl + shift + t": "恢复关闭标签页 Ctrl + Shift + T",
+    "volume up": "音量加",
+    "volume down": "音量减",
+    mute: "静音",
+    "play/pause": "播放/暂停",
+    "next track": "下一曲",
+    "previous track": "上一曲",
+    stop: "停止播放",
+    calculator: "计算器",
+    "this pc": "我的电脑",
+    browser: "浏览器",
+    mail: "邮件",
+    "media player": "媒体播放器",
+    "www home": "主页",
+    "www refresh": "刷新页面",
+    "lighting up": "屏幕亮度增加",
+    "lighting down": "屏幕亮度减少",
   });
 
   const FUNCKEY_KEYCODE_TO_LABEL = (() => {
@@ -2163,11 +2172,50 @@
     return out;
   }
 
-  function parseButtonMappingResponse(response, fallback = null) {
+  function parseButtonMappingResponse(response, fallback = null, expectedSourceCode = null) {
+    const expectedSource = Number.isFinite(Number(expectedSourceCode))
+      ? clampU8(expectedSourceCode)
+      : null;
+    const fallbackEntry = normalizeButtonMappingEntry(fallback || { source: "Unknown", funckey: 0, keycode: 0 });
+    const parseFromArgs = (args) => {
+      if (!(args instanceof Uint8Array) || args.length < 5) return null;
+      const sourceEcho = clampU8(args[1] ?? 0);
+      const hasSourceEcho = sourceEcho >= 1 && sourceEcho <= 5;
+      if (expectedSource !== null && hasSourceEcho && sourceEcho !== expectedSource) {
+        return {
+          source: `Unknown(source=${sourceEcho},expected=${expectedSource})`,
+          funckey: 0,
+          keycode: 0,
+        };
+      }
+      const funckey = clampU8(args[3] ?? 0);
+      const payloadLen = clampInt(args[4] ?? 0, 0, 16);
+      const payload = Array.from(args.slice(5, 5 + payloadLen)).map((x) => clampU8(x));
+      const keycode = decodeButtonPayload(funckey, payload);
+      const label = FUNCKEY_KEYCODE_TO_LABEL.get(`${funckey}:${keycode}`) || `Unknown(${funckey},${keycode})`;
+      return {
+        source: label,
+        funckey,
+        keycode,
+      };
+    };
+
+    const parsedFromArgs = parseFromArgs(response?.argumentsData);
+    if (parsedFromArgs) return parsedFromArgs;
+
     const raw = response?.raw instanceof Uint8Array ? response.raw : new Uint8Array();
     const hi = clampInt(response?.hidIndex ?? 0, 0, 1);
     if (raw.length < 12 - hi) {
-      return normalizeButtonMappingEntry(fallback || { source: "Unknown", funckey: 0, keycode: 0 });
+      return fallbackEntry;
+    }
+    const sourceEcho = clampU8(raw[8 - hi] ?? 0);
+    const hasSourceEcho = sourceEcho >= 1 && sourceEcho <= 5;
+    if (expectedSource !== null && hasSourceEcho && sourceEcho !== expectedSource) {
+      return {
+        source: `Unknown(source=${sourceEcho},expected=${expectedSource})`,
+        funckey: 0,
+        keycode: 0,
+      };
     }
     const funckey = clampU8(raw[10 - hi] ?? 0);
     const payloadLen = clampInt(raw[11 - hi] ?? 0, 0, 16);
@@ -2762,7 +2810,7 @@
           null,
           { checkHeader: false }
         );
-        out[btnId - 1] = res ? parseButtonMappingResponse(res, fallback) : fallback;
+        out[btnId - 1] = res ? parseButtonMappingResponse(res, fallback, sourceCode) : fallback;
       }
 
       return out;
