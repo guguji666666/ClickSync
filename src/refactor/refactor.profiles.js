@@ -47,6 +47,7 @@
     normalizeButtonMappingPatch,
     rapooTexts,
     atkTexts,
+    crdrakoTexts,
     ninjutsoTexts,
     razerTexts,
     KEYMAP_COMMON,
@@ -221,10 +222,11 @@
         advancedLayout: "dual",
         hasOnboardMemoryMode: false,
         warnOnDisableOnboardMemoryMode: false,
-        autoEnableOnboardMemoryOnConnect: false,
         hasLightforceSwitch: false,
         hasSurfaceMode: false,
         hasBhopDelay: false,
+        hasSpeedClick: false,
+        hasScrollHp: false,
         // When true, UI defers local slot-count repaint until device config ack to avoid transient DPI jumps.
         deferDpiSlotCountUiUntilAck: false,
         ledMasterBySecondarySurface: false,
@@ -464,7 +466,6 @@ id: "atk",
       advancedLayout: "dual",
       hasOnboardMemoryMode: false,
       warnOnDisableOnboardMemoryMode: false,
-      autoEnableOnboardMemoryOnConnect: false,
       hasLightforceSwitch: false,
       hasSurfaceMode: false,
       hasBhopDelay: false,
@@ -482,6 +483,262 @@ id: "atk",
       batteryPollMs: 60000,
       batteryPollTag: "60s",
       enterDelayMs: 0,
+    },
+  });
+
+  const CRDRAKO_LOD_VALUES = Object.freeze([0.7, 1, 2]);
+  const CRDRAKO_SCROLL_HP_MODES = Object.freeze([0, 1, 2, 3]);
+  const CRDRAKO_SCROLL_HP_WINDOWS = Object.freeze([100, 200, 300, 400, 500, 1000]);
+
+  function nearestCrdrakoLod(value) {
+    const n = toNumber(value);
+    if (!Number.isFinite(n)) return undefined;
+    return CRDRAKO_LOD_VALUES.reduce((best, item) => (
+      Math.abs(item - n) < Math.abs(best - n) ? item : best
+    ), CRDRAKO_LOD_VALUES[0]);
+  }
+
+  function writeCrdrakoPerformanceMode(value) {
+    if (value === true || value === 1) return true;
+    if (value === false || value === 0) return false;
+    const mode = String(value ?? "").trim().toLowerCase();
+    if (mode === "sport" || mode === "competitive" || mode === "competition") return true;
+    if (mode === "hp" || mode === "standard" || mode === "std") return false;
+    return undefined;
+  }
+
+  function readCrdrakoPerformanceMode(raw) {
+    const enabled = readBool(raw);
+    return enabled == null ? undefined : (enabled ? "sport" : "hp");
+  }
+
+  function normalizeCrdrakoScrollHpMode(value) {
+    const n = toNumber(value);
+    if (!Number.isFinite(n)) return undefined;
+    const mode = clamp(Math.round(n), 0, 3);
+    return CRDRAKO_SCROLL_HP_MODES.includes(mode) ? mode : undefined;
+  }
+
+  function normalizeCrdrakoScrollHpWindow(value) {
+    const n = toNumber(value);
+    if (!Number.isFinite(n)) return undefined;
+    return CRDRAKO_SCROLL_HP_WINDOWS.reduce((best, item) => (
+      Math.abs(item - n) < Math.abs(best - n) ? item : best
+    ), CRDRAKO_SCROLL_HP_WINDOWS[0]);
+  }
+
+  function normalizeCrdrakoSensorAngle(value) {
+    const n = toNumber(value);
+    if (!Number.isFinite(n)) return undefined;
+    return clamp(Math.round(n), -30, 30);
+  }
+
+  const CrdrakoProfile = composeDeviceProfile({
+    id: "crdrako",
+    ui: {
+      landingReadyText: "CRDRAKO READY",
+      landingTitle: crdrakoTexts.landingTitle,
+      landingCaption: crdrakoTexts.landingCaption,
+      keymap: {
+        imageSrc: "./assets/images/CRDRAKO_KO_ONE.png",
+        points: {
+          1: { x: 24, y: 10, side: "left" },
+          2: { x: 76, y: 30, side: "right" },
+          3: { x: 50, y: 20, side: "left" },
+          4: { x: 4, y: 39, side: "left" },
+          5: { x: 4, y: 51, side: "left" },
+        },
+        defaultLabels: {
+          1: "左键",
+          2: "右键",
+          3: "中键",
+          4: "前进",
+          5: "后退",
+        },
+      },
+      lod: crdrakoTexts.lod,
+      led: crdrakoTexts.led,
+      perfMode: crdrakoTexts.perfMode,
+      advancedPanels: {
+        dpiLightEffect: { enabled: false },
+        surfaceFeel: {
+          regions: ["dual-right"],
+          requiresCapabilities: ["surfaceFeel"],
+        },
+        speedClickMode: {
+          requiresCapabilities: ["speedEnable"],
+        },
+        scrollHpMode: {
+          requiresCapabilities: ["scrollHp"],
+        },
+        scrollHpWindowMs: {
+          requiresCapabilities: ["scrollHp"],
+        },
+        sensorAngle: {
+          requiresCapabilities: ["sensorAngle"],
+        },
+      },
+      advancedSourceRegionByStdKey: {
+        ...ADVANCED_SOURCE_REGION_DEFAULTS,
+        surfaceFeel: "dual-right",
+        scrollHpMode: "dual-right",
+        scrollHpWindowMs: "dual-left",
+      },
+    },
+    ranges: window.AppConfig?.ranges?.crdrako,
+    keyMap: {
+      performanceMode: "competitiveMode",
+      pollingWirelessHz: null,
+      dpiSlots: "dpiStages",
+      dpiSlotsX: "dpiStages",
+      dpiSlotsY: "dpiStages",
+      dpiSlotCount: "dpiStages",
+      activeDpiSlotIndex: "activeDpiStageIndex",
+      sleepSeconds: "deviceIdleTime",
+      debounceMs: "debounceTime",
+      surfaceModePrimary: null,
+      surfaceModeSecondary: null,
+      primaryLedFeature: null,
+      surfaceFeel: "lod",
+      keyScanningRate: null,
+      wirelessStrategyMode: null,
+      commProtocolMode: null,
+      sensorAngle: "sensorAngle",
+      linearCorrection: "angleSnap",
+      speedClickLeft: "speedEnable",
+      speedClickRight: "speedWindow",
+      scrollHpMode: "scrollHpMode",
+      scrollHpWindowMs: "scrollHpWindowMs",
+      dpiLightEffect: null,
+      receiverLightEffect: null,
+      staticLedColor: null,
+    },
+    transforms: {
+      performanceMode: {
+        write: writeCrdrakoPerformanceMode,
+        read: readCrdrakoPerformanceMode,
+      },
+      dpiSlots: {
+        write: (v) => normalizeDpiSlotArray(v),
+        read: (raw) => stagesToDpiSlots(raw),
+      },
+      dpiSlotsX: {
+        write: (v) => normalizeDpiSlotArray(v),
+        read: (raw) => stagesToDpiSlotsX(raw),
+      },
+      dpiSlotsY: {
+        write: (v) => normalizeDpiSlotArray(v),
+        read: (raw) => stagesToDpiSlotsY(raw),
+      },
+      dpiSlotCount: {
+        write: (v) => {
+          const n = toNumber(v);
+          if (!Number.isFinite(n)) return undefined;
+          return clamp(Math.round(n), 1, 5);
+        },
+        read: (raw) => stagesToSlotCount(raw),
+      },
+      activeDpiSlotIndex: {
+        write: (v) => {
+          const n = toNumber(v);
+          if (!Number.isFinite(n)) return undefined;
+          return Math.max(0, Math.round(n));
+        },
+        read: (raw) => readNumber(raw),
+      },
+      sleepSeconds: {
+        write: (v) => {
+          const n = toNumber(v);
+          if (!Number.isFinite(n)) return undefined;
+          return Math.max(0, Math.round(n));
+        },
+        read: (raw) => readNumber(raw),
+      },
+      debounceMs: {
+        write: (v) => {
+          const n = toNumber(v);
+          if (!Number.isFinite(n)) return undefined;
+          return clamp(Math.round(n), 0, 8);
+        },
+        read: (raw) => {
+          const n = readNumber(raw);
+          return Number.isFinite(n) ? clamp(Math.round(n), 0, 8) : undefined;
+        },
+      },
+      surfaceFeel: {
+        write: (v) => nearestCrdrakoLod(v),
+        read: (raw) => nearestCrdrakoLod(raw),
+      },
+      linearCorrection: { write: (v) => !!v, read: readBool },
+      speedClickLeft: { write: (v) => !!v, read: readBool },
+      speedClickRight: { write: (v) => !!v, read: readBool },
+      scrollHpMode: {
+        write: normalizeCrdrakoScrollHpMode,
+        read: normalizeCrdrakoScrollHpMode,
+      },
+      scrollHpWindowMs: {
+        write: normalizeCrdrakoScrollHpWindow,
+        read: normalizeCrdrakoScrollHpWindow,
+      },
+      sensorAngle: {
+        write: normalizeCrdrakoSensorAngle,
+        read: normalizeCrdrakoSensorAngle,
+      },
+    },
+    actions: {
+      activeDpiSlotIndex: async ({ hidApi, value }) => {
+        const idx = Math.max(0, Math.round(Number(value) || 0));
+        if (typeof hidApi?.setActiveDpiSlotIndex !== "function") return;
+        await hidApi.setActiveDpiSlotIndex(idx);
+      },
+      dpiSlotCount: async ({ hidApi, value }) => {
+        const nextCount = clamp(Math.round(Number(value) || 1), 1, 5);
+        if (typeof hidApi?.setDpiSlotCount !== "function") return;
+        await hidApi.setDpiSlotCount(nextCount);
+      },
+    },
+    dpiSnapper: defaultDpiSnapper,
+    features: {
+      hasPrimarySurfaceToggle: false,
+      hasSecondarySurfaceToggle: false,
+      hasPrimaryLedFeature: false,
+      hasPerformanceMode: true,
+      hasConfigSlots: false,
+      hasDualPollingRates: false,
+      hasMotionSync: true,
+      hasLinearCorrection: true,
+      hasRippleControl: true,
+      hasKeyScanRate: false,
+      hasWirelessStrategy: false,
+      hasCommProtocol: false,
+      hasLongRange: false,
+      hasAtkLights: false,
+      hasDpiLightCycle: false,
+      hasReceiverLightCycle: false,
+      hasStaticLedColorPanel: false,
+      hasDpiColors: false,
+      hasDpiLods: false,
+      hasDpiAdvancedAxis: true,
+      hasSensorAngle: true,
+      hideSensorAngleVisualization: false,
+      hideSensorAngleCenterMark: false,
+      hasSurfaceFeel: true,
+      showHeightViz: false,
+      hideSportPerfMode: false,
+      advancedLayout: "dual",
+      hasOnboardMemoryMode: false,
+      warnOnDisableOnboardMemoryMode: false,
+      hasLightforceSwitch: false,
+      hasSurfaceMode: false,
+      hasBhopDelay: false,
+      hasSpeedClick: true,
+      hasScrollHp: true,
+      deferDpiSlotCountUiUntilAck: false,
+      keymapButtonCount: 5,
+      batteryReadMode: "active",
+      batteryPollMs: 60000,
+      batteryPollTag: "60s",
+      enterDelayMs: 80,
     },
   });
 
@@ -654,6 +911,10 @@ id: "atk",
         labelLetterSpacing: "0.008em",
       },
       onboardMemoryDisableConfirmText: "是否关闭板载内存模式，关闭后驱动设置不保证可用",
+      onboardMemoryEnableConfirmText: [
+        "检测到当前罗技设备未开启板载内存模式。\n\n网页驱动需要板载内存模式，才能写入并使用设备配置；你也可以先在 GHUB 中手动开启。\n\n未适配型号可能因板载配置为空出现左右键或其他按键异常；若异常，关闭板载内存模式即可。\n\n确定：开启板载内存模式并进入\n取消：不启用，继续进入",
+        "Onboard Memory Mode is currently disabled.\n\nThe web driver needs Onboard Memory Mode to write and use device settings; you can also enable it in GHUB first.\n\nUnsupported models may have empty onboard profiles and lose left/right click or other buttons; if anything behaves abnormally, turn off Onboard Memory Mode.\n\nOK: enable Onboard Memory Mode and enter\nCancel: continue without enabling",
+      ],
     },
     ranges: {
       ...(window.AppConfig?.ranges?.rapoo || {}),
@@ -792,7 +1053,7 @@ id: "atk",
       hasKeyScanRate: false,
       hasOnboardMemoryMode: true,
       warnOnDisableOnboardMemoryMode: true,
-      autoEnableOnboardMemoryOnConnect: true,
+      confirmEnableOnboardMemoryOnConnect: true,
       hasLightforceSwitch: true,
       hasSurfaceMode: true,
       hasBhopDelay: true,
@@ -1279,7 +1540,6 @@ id: "atk",
       hideSportPerfMode: true,
       hasOnboardMemoryMode: false,
       warnOnDisableOnboardMemoryMode: false,
-      autoEnableOnboardMemoryOnConnect: false,
       hasLightforceSwitch: false,
       hasSurfaceMode: false,
       hasBhopDelay: false,
@@ -1296,6 +1556,7 @@ id: "atk",
   const DEVICE_PROFILES = {
     atk: AtkProfile,
     chaos: ChaosProfile,
+    crdrako: CrdrakoProfile,
     logitech: LogitechProfile,
     ninjutso: NinjutsoProfile,
     rapoo: RapooProfile,
