@@ -133,6 +133,9 @@ ui: {
   - `rippleControl`
   - `secondarySurfaceToggle`
   - `keyScanningRate`
+  - `speedClickMode`
+  - `scrollHpMode`
+  - `scrollHpWindowMs`
   - `surfaceModePrimary`
   - `primaryLedFeature`
   - `dpiLightEffect`
@@ -155,6 +158,7 @@ ui: {
 
 - `smartTrackingLevel` / `smartTrackingLiftDistance` / `smartTrackingLandingDistance` 是 `smartTrackingComposite` 的内部子视图，不作为独立顶层 gate 项
 - 目录必须定位**宿主面板节点**，不能只隐藏内部 `input` / `select`
+- `surfaceFeel` 可以由不同 profile 选择不同宿主形态：默认复用 `dual-left` range；需要三档 LOD 的设备可通过 `advancedSourceRegionByStdKey.surfaceFeel = "dual-right"` 复用右侧 `cycle` 宿主
 
 ## 6. 默认静态 Gate 映射表
 
@@ -165,6 +169,8 @@ ui: {
 - `rippleControl -> hasRippleControl`
 - `secondarySurfaceToggle -> hasSecondarySurfaceToggle`
 - `keyScanningRate -> hasKeyScanRate`
+- `speedClickMode -> hasSpeedClick`
+- `scrollHpMode` / `scrollHpWindowMs -> hasScrollHp`
 - `surfaceModePrimary -> hasPrimarySurfaceToggle`
 - `primaryLedFeature -> hasPrimaryLedFeature`
 - `dpiLightEffect -> hasDpiLightCycle`
@@ -190,6 +196,14 @@ Razer 当前 profile 中应显式声明：
 - `lowPowerThresholdPercent -> requiresCapabilities: ["lowPowerThresholdPercent"]`
 - `hyperpollingIndicator -> requiresCapabilities: ["hyperpollingIndicatorMode"]`
 - `sleepSeconds -> enabled: true`
+
+CRDRAKO 当前 profile 的新增高级项必须遵循同一套规则：
+
+- `surfaceFeel` 仍为标准键，协议字段映射到 `lod`；UI 归属声明为 `dual-right`，宿主为三档 `cycle`，点击顺序为 `0.7mm -> 1mm -> 2mm`
+- `scrollHpMode` 归属 `dual-right`，宿主为 `cycle`，点击顺序为 `关闭(0) -> 上滚(2) -> 下滚(3) -> 双向(1)`
+- `scrollHpWindowMs` 归属 `dual-left`，宿主为离散 `range`，档位为 `100/200/300/400/500/1000ms`
+- `speedClickMode` 是右侧 `cycle` 宿主，点击顺序为 `关闭 -> 仅左键 -> 仅右键 -> 左右键`，写入时仍下沉为 `speedClickLeft` / `speedClickRight` 两个标准键
+- `surfaceFeel`、`speedClickMode`、`scrollHpMode`、`scrollHpWindowMs` 的显隐与写入都必须通过 `advancedPanels.requiresCapabilities` 和协议层 `capabilities` gate，不能在 `app.js` 或 `refactor.ui.js` 新增品牌/PID 分支
 
 ## 8. Source Region 归属规则
 
@@ -231,6 +245,7 @@ Razer 当前 profile 中应显式声明：
    - `data-adv-item`
    - `data-adv-control`
    - `data-std-key`
+   - Synthetic controls that fan out to multiple stdKeys may use `data-std-key-fanout` instead of a single `data-std-key`; the fan-out stdKeys must still be documented in `profile.keyMap` / `transforms` and written through `enqueueDevicePatch(...)`.
 3. 在 `refactor.ui.js` 的高级面板 host 目录中登记宿主节点
 4. 在 `refactor.core.js` 的默认规则表中补充基础 gate
 5. 如某品牌需要特殊能力驱动，在 `refactor.profiles.js` 的 `ui.advancedPanels` 中覆盖规则

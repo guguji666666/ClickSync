@@ -479,7 +479,7 @@ ranges: {
 - `batteryPollTag`
 - `deferDpiSlotCountUiUntilAck`
 - `warnOnDisableOnboardMemoryMode`
-- `autoEnableOnboardMemoryOnConnect`
+- `confirmEnableOnboardMemoryOnConnect`
 
 说明：
 
@@ -511,6 +511,7 @@ ranges: {
 - `basicModeTypography`
 - `pollingThemeByWirelessHz`
 - `onboardMemoryDisableConfirmText`
+- `onboardMemoryEnableConfirmText`
 
 ## 8. 逐面板接入决策清单
 
@@ -715,18 +716,21 @@ profile/ranges 必备决策：
 
 - 是否存在板载内存模式
 - 是否断开前必须打开某模式
-- 是否连接后要自动启用某模式
+- 是否连接后要提示用户启用某模式
 
 当前项目中的关键决策项：
 
 - `features.hasOnboardMemoryMode`
 - `features.warnOnDisableOnboardMemoryMode`
-- `features.autoEnableOnboardMemoryOnConnect`
+- `features.confirmEnableOnboardMemoryOnConnect`
 - `ui.onboardMemoryDisableConfirmText`
+- `ui.onboardMemoryEnableConfirmText`
 
 注意事项：
 
-- 若启用了 `autoEnableOnboardMemoryOnConnect`，连接后 `app.js` 会检查并尝试自动写入 `onboardMemoryMode: true`
+- 不要在连接后默认强制写入 `onboardMemoryMode: true`
+- 若启用了 `confirmEnableOnboardMemoryOnConnect`，连接后 `app.js` 只在明确读到 `onboardMemoryMode === false` 时弹出浏览器原生确认；点击“确定”表示写入一次 `onboardMemoryMode: true` 并进入，点击“取消”表示不启用板载内存模式并继续进入；写入失败或读到未知值也都继续进入
+- 连接确认文案应说明：若出现按键等异常，关闭板载内存模式即可；同时避免堆叠长型号列表，确保 Chrome 原生确认框不被裁切
 - 若启用了 `warnOnDisableOnboardMemoryMode`，关闭时会弹确认
 
 ## 9. 什么时候不用改 `app.js` / `refactor.ui.js`
