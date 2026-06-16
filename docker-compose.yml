@@ -1,0 +1,6 @@
+services:
+  clicksync-web:
+    image: guguji666/clicksync:latest
+    ports:
+      - "18000:80"
+    restart: always
